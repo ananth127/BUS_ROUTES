@@ -13,7 +13,7 @@ const SignupForm = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/signup', { username, password, role , busId });
+      const response = await axios.post('https://bus-routes-ywvb.vercel.app/api/auth/signup', { username, password, role , busId });
       alert(response.data.message); // Show success message
     } catch (error) {
         setMessage(error.response?.data?.message || 'Error registering user');
