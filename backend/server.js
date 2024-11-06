@@ -10,7 +10,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-mongoose.connect('mongodb://localhost:27017/busTrackingDB', {
+mongoose.connect(process.env.mongodb_url, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
