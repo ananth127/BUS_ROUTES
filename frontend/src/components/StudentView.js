@@ -24,7 +24,7 @@ const StudentView = ({ busId }) => {
   useEffect(() => {
     const fetchLocation = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/bus/location/${busId}`);
+        const response = await axios.get(`https://bus-routes-ywvb.vercel.app/api/bus/location/${busId}`);
         const { latitude, longitude } = response.data;
         setBusLocation([latitude, longitude]);
       } catch (error) {
