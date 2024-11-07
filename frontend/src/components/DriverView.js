@@ -17,7 +17,7 @@ const busIcon = new L.Icon({
 
 const collegeLocation = [10.95628961382053, 77.95483683491189]; // College location
 
-const DriverView = () => {
+const DriverView = ({ busId }) => {
   const [busLocation, setBusLocation] = useState(null);
   const [isTracking, setIsTracking] = useState(false);
   const [routeControl, setRouteControl] = useState(null); // State to store route control
