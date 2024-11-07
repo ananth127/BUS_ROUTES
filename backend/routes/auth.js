@@ -31,14 +31,34 @@ const bus = await Bus.findOne({ busId });
             const hashedPassword = await bcrypt.hash(password, 10);
             const user = new User({ username, password: hashedPassword, role, busId });
             await user.save();
-       bus = new Bus({
-        busId,
-        location: { latitude, longitude },
-      });
-            res.status(201).json({ message: 'User registered successfully' });
+       
           } catch (error) {
             res.status(500).json({ message: 'Error registering Driver' });
           }
+    try {
+    // Find the bus by busId
+    
+    if (!bus) {
+      // If the bus doesn't exist, create a new entry
+      console.log("Bus not found, creating new entry...",busId);
+      bus = new Bus({
+        busId,
+        location: { latitude, longitude },
+      });
+    } else {
+      // Update existing bus location
+      bus.location.latitude = latitude;
+      bus.location.longitude = longitude;
+    }
+
+    // Save the updated bus location
+    await bus.save();
+    console.log("Location updated:", latitude, longitude);
+    res.status(200).json({ message: 'Driver Register successfully', bus });
+  } catch (error) {
+    console.error("Error updating location:", error);
+    res.status(500).json({ message: 'Failed to update location', error });
+  }
   }
 });
 
