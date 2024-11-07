@@ -7,7 +7,7 @@ router.post('/update-location', async (req, res) => {
   const { latitude, longitude,busId } = req.body;
   console.log("Processing location update...");
    // Example bus ID, replace with dynamic ID if needed
-
+console.log("bus Id server : ",busId);
   try {
     // Find the bus by busId
     let bus = await Bus.findOne({ busId });
