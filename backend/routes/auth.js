@@ -7,6 +7,14 @@ const Bus = require('../models/Bus');
 
 router.post('/signup', async (req, res) => {
   const { username, password, role, busId } = req.body;
+const bus = await Bus.findOne({ busId });
+    if (!bus) {
+          console.log("Bus not found");
+          return res.status(404).json({ message: 'Bus not found' });
+        }
+        else{
+          console.log(user.busId,"student");
+    
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({ username, password: hashedPassword, role, busId });
@@ -15,13 +23,13 @@ router.post('/signup', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Error registering user' });
   }
+        }
 });
 
 router.post('/login', async (req, res) => {
     const { username, password , role, busId} = req.body;
   
-    const bus = await Bus.findOne({ busId });
-    try {
+        try {
       const user = await User.findOne({ username, role });
       if (!user || !(await bcrypt.compare(password, user.password))) {
         return res.status(400).json({ message: 'Invalid credentials' });
@@ -34,14 +42,10 @@ router.post('/login', async (req, res) => {
         
       }
       else if (role === 'student') {
-       if (!bus) {
-          console.log("Bus not found");
-          return res.status(404).json({ message: 'Bus not found' });
-        }
-        else{
+       
           console.log(user.busId,"student");
           return res.status(200).json({ message: 'Student logged in', userId: user._id,busID:user.busId,msg:"hello"  });
-          }
+          
       }
       else {
         return res.status(400).json({ message: 'Invalid role' });
