@@ -3,6 +3,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const router = express.Router();
+const Bus = require('../models/Bus');
 
 router.post('/signup', async (req, res) => {
   const { username, password, role, busId } = req.body;
@@ -19,6 +20,7 @@ router.post('/signup', async (req, res) => {
 router.post('/login', async (req, res) => {
     const { username, password , role, busId} = req.body;
   
+    const bus = await Bus.findOne({ busId });
     try {
       const user = await User.findOne({ username, role });
       if (!user || !(await bcrypt.compare(password, user.password))) {
@@ -32,8 +34,14 @@ router.post('/login', async (req, res) => {
         
       }
       else if (role === 'student') {
-        console.log(user.busId,"student");
-        return res.status(200).json({ message: 'Student logged in', userId: user._id,busID:user.busId,msg:"hello"  });
+       if (!bus) {
+          console.log("Bus not found");
+          return res.status(404).json({ message: 'Bus not found' });
+        }
+        else{
+          console.log(user.busId,"student");
+          return res.status(200).json({ message: 'Student logged in', userId: user._id,busID:user.busId,msg:"hello"  });
+          }
       }
       else {
         return res.status(400).json({ message: 'Invalid role' });
