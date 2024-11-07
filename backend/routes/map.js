@@ -4,9 +4,9 @@ const Bus = require('../models/Bus');
 
 // Route to update bus location
 router.post('/update-location', async (req, res) => {
-  const { latitude, longitude } = req.body;
+  const { latitude, longitude,busId } = req.body;
   console.log("Processing location update...");
-  const busId = "1"; // Example bus ID, replace with dynamic ID if needed
+   // Example bus ID, replace with dynamic ID if needed
 
   try {
     // Find the bus by busId
