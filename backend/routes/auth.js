@@ -6,7 +6,7 @@ const router = express.Router();
 const Bus = require('../models/Bus');
 
 router.post('/signup', async (req, res) => {
-  const { username, password, role, busId } = req.body;
+  const { username, password, role, busId,latitude,longitude } = req.body;
 const bus = await Bus.findOne({ busId });
     if (role === 'student'){
         if(!bus) {
@@ -31,6 +31,10 @@ const bus = await Bus.findOne({ busId });
             const hashedPassword = await bcrypt.hash(password, 10);
             const user = new User({ username, password: hashedPassword, role, busId });
             await user.save();
+       bus = new Bus({
+        busId,
+        location: { latitude, longitude },
+      });
             res.status(201).json({ message: 'User registered successfully' });
           } catch (error) {
             res.status(500).json({ message: 'Error registering Driver' });
