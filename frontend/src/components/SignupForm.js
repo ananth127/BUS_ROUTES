@@ -8,15 +8,42 @@ const SignupForm = () => {
   const [busId, setBusId] = useState('');
   const [role, setRole] = useState('student'); // Default role
   const [message, setMessage] = useState('');
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('https://bus-routes-ywvb.vercel.app/api/auth/signup', { username, password, role , busId });
+      // For drivers, get the current location
+      if (role === 'driver') {
+        await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              setLatitude(position.coords.latitude);
+              setLongitude(position.coords.longitude);
+              resolve();
+            },
+            (error) => {
+              console.error("Geolocation error:", error);
+              reject(error);
+            }
+          );
+        });
+      }
+
+      const response = await axios.post('https://bus-routes-ywvb.vercel.app/api/auth/signup', {
+        username,
+        password,
+        role,
+        busId: role === 'driver' ? busId : undefined, // Include busId only for drivers
+        latitude: role === 'driver' ? latitude : undefined,
+        longitude: role === 'driver' ? longitude : undefined,
+      });
       alert(response.data.message); // Show success message
+      setMessage(response.data.message); // Set success message in state
     } catch (error) {
-        setMessage(error.response?.data?.message || 'Error registering user');
+      setMessage(error.response?.data?.message || 'Error registering user');
       alert(error.response?.data?.message || 'Error registering user');
     }
   };
@@ -38,7 +65,14 @@ const SignupForm = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <input type='number' placeholder='Bus ID' value={busId} onChange={(e) => setBusId(e.target.value)} />
+      {role === 'driver' && (
+        <input
+          type="number"
+          placeholder="Bus ID"
+          value={busId}
+          onChange={(e) => setBusId(e.target.value)}
+        />
+      )}
       <select value={role} onChange={(e) => setRole(e.target.value)}>
         <option value="student">Student</option>
         <option value="driver">Driver</option>
