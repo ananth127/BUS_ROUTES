@@ -8,7 +8,7 @@ const Bus = require('../models/Bus');
 router.post('/signup', async (req, res) => {
   const { username, password, role, busId } = req.body;
 const bus = await Bus.findOne({ busId });
-    if (!bus) {
+    if ((role === 'student') &&(!bus)) {
           console.log("Bus not found");
           return res.status(404).json({ message: 'Bus not found' });
         }
