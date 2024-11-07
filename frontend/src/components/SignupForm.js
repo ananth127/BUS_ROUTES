@@ -36,11 +36,11 @@ const SignupForm = () => {
         username,
         password,
         role,
-        //busId: role === 'driver' ? busId : undefined, // Include busId only for drivers,
         busId,
         latitude: role === 'driver' ? latitude : undefined,
         longitude: role === 'driver' ? longitude : undefined,
       });
+
       alert(response.data.message); // Show success message
       setMessage(response.data.message); // Set success message in state
     } catch (error) {
@@ -66,14 +66,12 @@ const SignupForm = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-     // {role === 'driver' && (
-        <input
-          type="number"
-          placeholder="Bus ID"
-          value={busId}
-          onChange={(e) => setBusId(e.target.value)}
-        />
-     // )}
+      <input
+        type="number"
+        placeholder="Bus ID"
+        value={busId}
+        onChange={(e) => setBusId(e.target.value)}
+      />
       <select value={role} onChange={(e) => setRole(e.target.value)}>
         <option value="student">Student</option>
         <option value="driver">Driver</option>
