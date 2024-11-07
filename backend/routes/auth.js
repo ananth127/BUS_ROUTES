@@ -8,22 +8,34 @@ const Bus = require('../models/Bus');
 router.post('/signup', async (req, res) => {
   const { username, password, role, busId } = req.body;
 const bus = await Bus.findOne({ busId });
-    if ((role === 'student') &&(!bus)) {
+    if (role === 'student'){
+        if(!bus) {
           console.log("Bus not found");
           return res.status(404).json({ message: 'Bus not found' });
         }
         else{
           console.log(user.busId,"student");
     
-  try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ username, password: hashedPassword, role, busId });
-    await user.save();
-    res.status(201).json({ message: 'User registered successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'Error registering user' });
-  }
+          try {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const user = new User({ username, password: hashedPassword, role, busId });
+            await user.save();
+            res.status(201).json({ message: 'User registered successfully' });
+          } catch (error) {
+            res.status(500).json({ message: 'Error registering Student' });
+          }
         }
+}
+  else{
+     try {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const user = new User({ username, password: hashedPassword, role, busId });
+            await user.save();
+            res.status(201).json({ message: 'User registered successfully' });
+          } catch (error) {
+            res.status(500).json({ message: 'Error registering Driver' });
+          }
+  }
 });
 
 router.post('/login', async (req, res) => {
