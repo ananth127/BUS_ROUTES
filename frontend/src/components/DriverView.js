@@ -31,7 +31,7 @@ const DriverView = ({ busId }) => {
           ({ coords }) => {
             const { latitude, longitude } = coords;
             setBusLocation([latitude, longitude]);
-            
+            console.log("busId update = ",busId);
             // Send the location to the server
             axios.post('https://bus-routes-ywvb.vercel.app/api/map/update-location', { latitude, longitude,busId })
               .catch((error) => console.error("Error sending location:", error));
